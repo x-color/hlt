@@ -4,7 +4,7 @@
 
 ## Demo
 
-![demo](resouces/demo.gif)
+![demo](resouces/demo002.gif)
 
 ## Usage
 
@@ -16,10 +16,10 @@ $ hlt line text file.txt
 $ cat file.txt | hlt line text
 
 # color charactors in lines red
-$ cat file.txt | hlt line -c 196 text
+$ cat file.txt | hlt line -c red text
 
-# color background of lines red
-$ cat file.txt | hlt line -b 196 text
+# color background of lines blue
+$ cat file.txt | hlt line -b blue text
 ```
 
 ### highlight a text
@@ -30,11 +30,25 @@ $ hlt word text file.txt
 $ cat file.txt | hlt word text
 
 # color 'text' red
-$ cat file.txt | hlt word -c 196 text
+$ cat file.txt | hlt word -c red text
 
-# color background of `text` red
-$ cat file.txt | hlt word -b 196 text
+# color background of `text` blue
+$ cat file.txt | hlt word -b blue text
 ```
+
+### Options
+
+Settable color to options(`-b`, `-c`) of highlight commands are
+
+- none
+- blue
+- green
+- orange
+- pink
+- purple
+- red
+- yellow
+- 0 ~ 255
 
 ## Install
 
