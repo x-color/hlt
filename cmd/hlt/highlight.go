@@ -41,8 +41,8 @@ func genBackColor(num int) (colorCode string) {
 	return fmt.Sprintf("\x1b[48;5;%dm", num)
 }
 
-// genColorCode generates color code from color number
-func genColorCode(charColor, backColor int) (colorCode string) {
+// genStyleCode generates color code from color number
+func genStyleCode(charColor, backColor int) (colorCode string) {
 	if 0 <= charColor && charColor <= 255 {
 		colorCode = strings.Join([]string{colorCode, genCharColor(charColor)}, "")
 	}
@@ -86,7 +86,7 @@ func hightlightProcess(arg Argument, opt Option, addColor func(string, string, c
 	} else {
 		go readFiles(arg.files, lines)
 	}
-	colorCode := genColorCode(opt.charactor, opt.background)
+	colorCode := genStyleCode(opt.charactor, opt.background)
 	go addColor(arg.pattern, colorCode, lines, output)
 	for line := range output {
 		fmt.Println(line)

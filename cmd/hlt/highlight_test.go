@@ -24,7 +24,7 @@ func TestGenBackColor(t *testing.T) {
 	}
 }
 
-func TestGenColorCode(t *testing.T) {
+func TestGenStyleCode(t *testing.T) {
 	testCase := map[string][]int{
 		"\x1b[38;5;0m\x1b[48;5;255m": []int{0, 255},
 		"\x1b[38;5;0m":               []int{0, 256},
@@ -32,7 +32,7 @@ func TestGenColorCode(t *testing.T) {
 		"":                           []int{256, -1},
 	}
 	for expected, set := range testCase {
-		actual := genColorCode(set[0], set[1])
+		actual := genStyleCode(set[0], set[1])
 		if actual != expected {
 			msg := "Didn't generate correct color code"
 			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
