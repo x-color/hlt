@@ -1,6 +1,7 @@
 package main
 
 import (
+	"errors"
 	"strings"
 	"testing"
 )
@@ -74,5 +75,42 @@ func TestHighlightText(t *testing.T) {
 	if actual != expected {
 		msg := "Didn't return correct the sets of first index and last index"
 		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
+	}
+}
+
+func TestColorToNumCorrectString(t *testing.T) {
+	testCase := map[string]int{
+		"red":  196,
+		"56":   56,
+		"none": -1,
+	}
+	for input, expected := range testCase {
+		actual, err := colorToNum(input)
+		if err != nil {
+			msg := "Didn't convert to correct color number. Catched error"
+			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, err)
+		}
+		if actual != expected {
+			msg := "Didn't convert correct color number"
+			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
+		}
+	}
+}
+
+func TestColorToNumIncorrectString(t *testing.T) {
+	testCase := map[string]error{
+		"test": errors.New("not defined color"),
+		"a56":  errors.New("not defined color"),
+	}
+	for input, expected := range testCase {
+		_, actual := colorToNum(input)
+		if actual == nil {
+			msg := "Didn't catched error of converting incorrect color"
+			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
+		}
+		if actual.Error() != expected.Error() {
+			msg := "Didn't convert correct color number"
+			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
+		}
 	}
 }

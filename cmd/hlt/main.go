@@ -8,34 +8,10 @@ import (
 	"github.com/urfave/cli"
 )
 
-type Option struct {
-	background int
-	charactor  int
-}
-
-type Argument struct {
-	pattern string
-	files   []string
-}
-
-var opt = Option{}
-var arg = Argument{}
-
-func highlightAction(addColor func(string, string, chan string, chan string)) (action func(*cli.Context)) {
-	return func(c *cli.Context) {
-		switch {
-		case c.NArg() >= 2:
-			arg.files = c.Args()[1:]
-			fallthrough
-		case c.NArg() == 1:
-			arg.pattern = c.Args()[0]
-		default:
-			fmt.Fprintln(os.Stderr, "Incorrect Usage. no arguments")
-			cli.ShowAppHelp(c)
-			return
-		}
-		hightlightProcess(arg, opt, addColor)
-	}
+func usageError(name, usage, message string) {
+	fmt.Fprintln(os.Stderr, "Incorrect Usage.", message)
+	fmt.Fprintln(os.Stderr, "Usage:", usage)
+	fmt.Fprintf(os.Stderr, "If you want more information, execute '%s --help'", name)
 }
 
 func main() {
@@ -62,19 +38,18 @@ func main() {
 			Description: strings.Join([]string{
 				"It highlights lines containing a text matched given pattern in files (or standard input if no files set to arguments).",
 				"It highlights only charactor on by default.",
+				"Settable color is 0~255 and 'none','blue','green','orange','pink','purple','red','yellow'.",
 			}, " "),
 			Flags: []cli.Flag{
-				cli.IntFlag{
-					Name:        "background, b",
-					Value:       -1,
-					Usage:       "color background. `color` is 0~255",
-					Destination: &opt.background,
+				cli.StringFlag{
+					Name:  "background, b",
+					Value: "none",
+					Usage: "`color` background",
 				},
-				cli.IntFlag{
-					Name:        "charactor, c",
-					Value:       1,
-					Usage:       "color charactor. `color` is 0~255",
-					Destination: &opt.charactor,
+				cli.StringFlag{
+					Name:  "charactor, c",
+					Value: "red",
+					Usage: "`color` charactor",
 				},
 			},
 			Action: highlightAction(hightlightLines),
@@ -87,19 +62,18 @@ func main() {
 			Description: strings.Join([]string{
 				"It highlights texts matched given pattern in files (or standard input if no files set to arguments).",
 				"It highlights only charactor on by default.",
+				"Settable color is 0~255 and 'none','blue','green','orange','pink','purple','red','yellow'.",
 			}, " "),
 			Flags: []cli.Flag{
-				cli.IntFlag{
-					Name:        "background, b",
-					Value:       -1,
-					Usage:       "color background. `color` is 0~255",
-					Destination: &opt.background,
+				cli.StringFlag{
+					Name:  "background, b",
+					Value: "none",
+					Usage: "`color` background",
 				},
-				cli.IntFlag{
-					Name:        "charactor, c",
-					Value:       1,
-					Usage:       "color charactor. `color` is 0~255",
-					Destination: &opt.charactor,
+				cli.StringFlag{
+					Name:  "charactor, c",
+					Value: "red",
+					Usage: "`color` charactor",
 				},
 			},
 			Action: highlightAction(hightlightText),
@@ -119,12 +93,10 @@ func main() {
 			return
 		}
 		if c.NArg() > 0 {
-			fmt.Fprintln(os.Stderr, "Incorrect Usage. invalid command")
+			usageError(c.App.Name, c.App.UsageText, "invalid command")
 		} else {
-			fmt.Fprintln(os.Stderr, "Incorrect Usage. no command")
+			usageError(c.App.Name, c.App.UsageText, "no command")
 		}
-		fmt.Fprintln(os.Stderr, "Usage:", app.UsageText)
-		fmt.Fprintf(os.Stderr, "If you want more information, execute '%s --help'", app.Name)
 	}
 
 	app.Run(os.Args)
