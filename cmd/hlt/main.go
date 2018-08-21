@@ -19,7 +19,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "hlt"
 	app.Usage = "highlight texts or lines matched a given pattern in files"
-	app.Version = "0.1.0"
+	app.Version = "0.2.0"
 	app.Author = "x-color"
 	app.HelpName = app.Name
 	app.UsageText = app.Name + " [global option] command [option]... [argument]..."
@@ -28,6 +28,40 @@ func main() {
 		"highlights texts or lines matched a given pattern in files (or standard input if no files set to arguments).",
 	}, " ")
 	app.HideHelp = true
+
+	// It is flag of highlight commands ('word', 'line')
+	highlightFlags := []cli.Flag{
+		cli.StringFlag{
+			Name:  "background, b",
+			Value: "none",
+			Usage: "`color` background",
+		},
+		cli.StringFlag{
+			Name:  "charactor, c",
+			Value: "red",
+			Usage: "`color` charactor",
+		},
+		cli.BoolFlag{
+			Name:  "bold, B",
+			Usage: "bold format",
+		},
+		cli.BoolFlag{
+			Name:  "hide, H",
+			Usage: "hide text",
+		},
+		cli.BoolFlag{
+			Name:  "italic, I",
+			Usage: "italic format",
+		},
+		cli.BoolFlag{
+			Name:  "strikethrough, S",
+			Usage: "strikethrough text",
+		},
+		cli.BoolFlag{
+			Name:  "underline, U",
+			Usage: "underline text",
+		},
+	}
 
 	app.Commands = []cli.Command{
 		{
@@ -40,18 +74,7 @@ func main() {
 				"It highlights only charactor on by default.",
 				"Settable color is 0~255 and 'none','blue','green','orange','pink','purple','red','yellow'.",
 			}, " "),
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "background, b",
-					Value: "none",
-					Usage: "`color` background",
-				},
-				cli.StringFlag{
-					Name:  "charactor, c",
-					Value: "red",
-					Usage: "`color` charactor",
-				},
-			},
+			Flags:  highlightFlags,
 			Action: highlightAction(hightlightLines),
 		},
 		{
@@ -64,18 +87,7 @@ func main() {
 				"It highlights only charactor on by default.",
 				"Settable color is 0~255 and 'none','blue','green','orange','pink','purple','red','yellow'.",
 			}, " "),
-			Flags: []cli.Flag{
-				cli.StringFlag{
-					Name:  "background, b",
-					Value: "none",
-					Usage: "`color` background",
-				},
-				cli.StringFlag{
-					Name:  "charactor, c",
-					Value: "red",
-					Usage: "`color` charactor",
-				},
-			},
+			Flags:  highlightFlags,
 			Action: highlightAction(hightlightText),
 		},
 	}

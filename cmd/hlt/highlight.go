@@ -11,8 +11,13 @@ import (
 
 // Option sets options of highlight commands
 type Option struct {
-	background int
-	charactor  int
+	background    int
+	charactor     int
+	bold          bool
+	hide          bool
+	italic        bool
+	strikethrough bool
+	underline     bool
 }
 
 // Argument sets arguments of highlight commands
@@ -41,13 +46,53 @@ func genBackColor(num int) (colorCode string) {
 	return fmt.Sprintf("\x1b[48;5;%dm", num)
 }
 
+// genBoldStyle generates bold style code
+func genBoldStyle() (styleCode string) {
+	return "\x1b[1m"
+}
+
+// genHideStyle generates hide style code
+func genHideStyle() (styleCode string) {
+	return "\x1b[8m"
+}
+
+// genItalicStyle generates italic style code
+func genItalicStyle() (styleCode string) {
+	return "\x1b[3m"
+}
+
+// genStrikethroughStyle generates strikethrough style code
+func genStrikethroughStyle() (styleCode string) {
+	return "\x1b[9m"
+}
+
+// genUnderlineStyle generates underline style code
+func genUnderlineStyle() (styleCode string) {
+	return "\x1b[4m"
+}
+
 // genStyleCode generates color code from color number
-func genStyleCode(charColor, backColor int) (colorCode string) {
-	if 0 <= charColor && charColor <= 255 {
-		colorCode = strings.Join([]string{colorCode, genCharColor(charColor)}, "")
+func genStyleCode(opt Option) (colorCode string) {
+	if 0 <= opt.charactor && opt.charactor <= 255 {
+		colorCode += genCharColor(opt.charactor)
 	}
-	if 0 <= backColor && backColor <= 255 {
-		colorCode = strings.Join([]string{colorCode, genBackColor(backColor)}, "")
+	if 0 <= opt.background && opt.background <= 255 {
+		colorCode += genBackColor(opt.background)
+	}
+	if opt.bold {
+		colorCode += genBoldStyle()
+	}
+	if opt.hide {
+		colorCode += genHideStyle()
+	}
+	if opt.italic {
+		colorCode += genItalicStyle()
+	}
+	if opt.strikethrough {
+		colorCode += genStrikethroughStyle()
+	}
+	if opt.underline {
+		colorCode += genUnderlineStyle()
 	}
 	return colorCode
 }
@@ -86,7 +131,7 @@ func hightlightProcess(arg Argument, opt Option, addColor func(string, string, c
 	} else {
 		go readFiles(arg.files, lines)
 	}
-	colorCode := genStyleCode(opt.charactor, opt.background)
+	colorCode := genStyleCode(opt)
 	go addColor(arg.pattern, colorCode, lines, output)
 	for line := range output {
 		fmt.Println(line)
@@ -133,6 +178,11 @@ func setOptions(c *cli.Context) (opt Option, err error) {
 	if err != nil {
 		usageError(c.App.Name, c.App.UsageText, err.Error())
 	}
+	opt.bold = c.Bool("bold")
+	opt.hide = c.Bool("hide")
+	opt.italic = c.Bool("italic")
+	opt.strikethrough = c.Bool("strikethrough")
+	opt.underline = c.Bool("underline")
 	return opt, nil
 }
 

@@ -11,7 +11,7 @@ func TestGenCharColor(t *testing.T) {
 	actual := genCharColor(9)
 	if actual != expected {
 		msg := "Didn't generate correct charactor color code"
-		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
+		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
 	}
 }
 
@@ -20,19 +20,64 @@ func TestGenBackColor(t *testing.T) {
 	actual := genBackColor(9)
 	if actual != expected {
 		msg := "Didn't generate correct background color code"
-		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
+		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+	}
+}
+
+func TestGenBoldStyle(t *testing.T) {
+	expected := "\x1b[1m"
+	actual := genBoldStyle()
+	if actual != expected {
+		msg := "Didn't generate correct style code"
+		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+	}
+}
+
+func TestGenHideStyle(t *testing.T) {
+	expected := "\x1b[8m"
+	actual := genHideStyle()
+	if actual != expected {
+		msg := "Didn't generate correct style code"
+		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+	}
+}
+
+func TestGenItalicStyle(t *testing.T) {
+	expected := "\x1b[3m"
+	actual := genItalicStyle()
+	if actual != expected {
+		msg := "Didn't generate correct style code"
+		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+	}
+}
+
+func TestGenStrikethroughStyle(t *testing.T) {
+	expected := "\x1b[9m"
+	actual := genStrikethroughStyle()
+	if actual != expected {
+		msg := "Didn't generate correct style code"
+		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+	}
+}
+
+func TestGenUnderlineStyle(t *testing.T) {
+	expected := "\x1b[4m"
+	actual := genUnderlineStyle()
+	if actual != expected {
+		msg := "Didn't generate correct style code"
+		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
 	}
 }
 
 func TestGenStyleCode(t *testing.T) {
-	testCase := map[string][]int{
-		"\x1b[38;5;0m\x1b[48;5;255m": []int{0, 255},
-		"\x1b[38;5;0m":               []int{0, 256},
-		"\x1b[48;5;255m":             []int{-1, 255},
-		"":                           []int{256, -1},
+	testCase := map[string]Option{
+		"\x1b[38;5;0m\x1b[48;5;255m": Option{background: 255, charactor: 0},
+		"\x1b[38;5;0m":               Option{background: 256, charactor: 0},
+		"\x1b[48;5;255m":             Option{background: 255, charactor: -1},
+		"":                           Option{background: 256, charactor: -1},
 	}
-	for expected, set := range testCase {
-		actual := genStyleCode(set[0], set[1])
+	for expected, opt := range testCase {
+		actual := genStyleCode(opt)
 		if actual != expected {
 			msg := "Didn't generate correct color code"
 			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
