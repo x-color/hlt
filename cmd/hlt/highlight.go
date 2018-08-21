@@ -44,17 +44,16 @@ func genCharColor(color string) (colorCode string) {
 	if err == nil {
 		if 0 <= num && num <= 255 {
 			return fmt.Sprintf("\x1b[38;5;%dm", num)
-		} else {
-			return ""
 		}
+		return ""
 	}
 	// If color is color name, it returns 8 colors.
 	// The string is suppurted by most terminals.
 	num, ok := colorNumber[color]
-	if !ok {
-		return ""
+	if ok {
+		return fmt.Sprintf("\x1b[3%dm", num)
 	}
-	return fmt.Sprintf("\x1b[3%dm", num)
+	return ""
 }
 
 // genBackColor generates background color code from color number
@@ -65,17 +64,16 @@ func genBackColor(color string) (colorCode string) {
 	if err == nil {
 		if 0 <= num && num <= 255 {
 			return fmt.Sprintf("\x1b[48;5;%dm", num)
-		} else {
-			return ""
 		}
+		return ""
 	}
 	// If color is color name, it returns 8 colors.
 	// The string is suppurted by most terminals.
 	num, ok := colorNumber[color]
-	if !ok {
-		return ""
+	if ok {
+		return fmt.Sprintf("\x1b[4%dm", num)
 	}
-	return fmt.Sprintf("\x1b[4%dm", num)
+	return ""
 }
 
 // genBoldStyle generates bold style code
