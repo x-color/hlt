@@ -49,11 +49,11 @@ $ cat file.txt | hlt line -I text
 Settable color to options(`-b`, `-c`) of highlight commands are
 
 - none
+- black
 - blue
+- cyan
 - green
-- orange
-- pink
-- purple
+- magenta
 - red
 - yellow
 - 0 ~ 255
