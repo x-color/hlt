@@ -22,7 +22,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "hlt"
 	app.Usage = "highlight texts or lines matched a given pattern in files"
-	app.Version = "0.2.2"
+	app.Version = "0.2.3"
 	app.Author = "x-color"
 	app.HelpName = app.Name
 	app.UsageText = app.Name + " [global option] command [option]... [argument]..."

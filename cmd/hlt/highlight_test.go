@@ -39,7 +39,7 @@ func TestGenBackColor(t *testing.T) {
 
 func TestGenBoldStyle(t *testing.T) {
 	expected := "\x1b[1m"
-	actual := genBoldStyle()
+	actual := genBoldStyle(true)
 	if actual != expected {
 		msg := "Didn't generate correct style code"
 		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
@@ -48,7 +48,7 @@ func TestGenBoldStyle(t *testing.T) {
 
 func TestGenHideStyle(t *testing.T) {
 	expected := "\x1b[8m"
-	actual := genHideStyle()
+	actual := genHideStyle(true)
 	if actual != expected {
 		msg := "Didn't generate correct style code"
 		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
@@ -57,7 +57,7 @@ func TestGenHideStyle(t *testing.T) {
 
 func TestGenItalicStyle(t *testing.T) {
 	expected := "\x1b[3m"
-	actual := genItalicStyle()
+	actual := genItalicStyle(true)
 	if actual != expected {
 		msg := "Didn't generate correct style code"
 		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
@@ -66,7 +66,7 @@ func TestGenItalicStyle(t *testing.T) {
 
 func TestGenStrikethroughStyle(t *testing.T) {
 	expected := "\x1b[9m"
-	actual := genStrikethroughStyle()
+	actual := genStrikethroughStyle(true)
 	if actual != expected {
 		msg := "Didn't generate correct style code"
 		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
@@ -75,7 +75,7 @@ func TestGenStrikethroughStyle(t *testing.T) {
 
 func TestGenUnderlineStyle(t *testing.T) {
 	expected := "\x1b[4m"
-	actual := genUnderlineStyle()
+	actual := genUnderlineStyle(true)
 	if actual != expected {
 		msg := "Didn't generate correct style code"
 		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))

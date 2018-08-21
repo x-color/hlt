@@ -77,49 +77,54 @@ func genBackColor(color string) (colorCode string) {
 }
 
 // genBoldStyle generates bold style code
-func genBoldStyle() (styleCode string) {
-	return "\x1b[1m"
+func genBoldStyle(yes bool) (styleCode string) {
+	if yes {
+		return "\x1b[1m"
+	}
+	return ""
 }
 
 // genHideStyle generates hide style code
-func genHideStyle() (styleCode string) {
-	return "\x1b[8m"
+func genHideStyle(yes bool) (styleCode string) {
+	if yes {
+		return "\x1b[8m"
+	}
+	return ""
 }
 
 // genItalicStyle generates italic style code
-func genItalicStyle() (styleCode string) {
-	return "\x1b[3m"
+func genItalicStyle(yes bool) (styleCode string) {
+	if yes {
+		return "\x1b[3m"
+	}
+	return ""
 }
 
 // genStrikethroughStyle generates strikethrough style code
-func genStrikethroughStyle() (styleCode string) {
-	return "\x1b[9m"
+func genStrikethroughStyle(yes bool) (styleCode string) {
+	if yes {
+		return "\x1b[9m"
+	}
+	return ""
 }
 
 // genUnderlineStyle generates underline style code
-func genUnderlineStyle() (styleCode string) {
-	return "\x1b[4m"
+func genUnderlineStyle(yes bool) (styleCode string) {
+	if yes {
+		return "\x1b[4m"
+	}
+	return ""
 }
 
 // genStyleCode generates color code from color number
 func genStyleCode(opt Option) (colorCode string) {
 	colorCode += genCharColor(opt.charactor)
 	colorCode += genBackColor(opt.background)
-	if opt.bold {
-		colorCode += genBoldStyle()
-	}
-	if opt.hide {
-		colorCode += genHideStyle()
-	}
-	if opt.italic {
-		colorCode += genItalicStyle()
-	}
-	if opt.strikethrough {
-		colorCode += genStrikethroughStyle()
-	}
-	if opt.underline {
-		colorCode += genUnderlineStyle()
-	}
+	colorCode += genBoldStyle(opt.bold)
+	colorCode += genHideStyle(opt.hide)
+	colorCode += genItalicStyle(opt.italic)
+	colorCode += genStrikethroughStyle(opt.strikethrough)
+	colorCode += genUnderlineStyle(opt.underline)
 	return colorCode
 }
 
