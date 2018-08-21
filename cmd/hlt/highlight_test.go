@@ -1,26 +1,39 @@
 package main
 
 import (
-	"errors"
 	"strings"
 	"testing"
 )
 
 func TestGenCharColor(t *testing.T) {
-	expected := "\x1b[38;5;9m"
-	actual := genCharColor(9)
-	if actual != expected {
-		msg := "Didn't generate correct charactor color code"
-		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+	testCase := map[string]string{
+		"9":    "\x1b[38;5;9m",
+		"red":  "\x1b[31m",
+		"none": "",
+		"256":  "",
+	}
+	for color, expected := range testCase {
+		actual := genCharColor(color)
+		if actual != expected {
+			msg := "Didn't generate correct charactor color code"
+			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+		}
 	}
 }
 
 func TestGenBackColor(t *testing.T) {
-	expected := "\x1b[48;5;9m"
-	actual := genBackColor(9)
-	if actual != expected {
-		msg := "Didn't generate correct background color code"
-		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+	testCase := map[string]string{
+		"9":    "\x1b[48;5;9m",
+		"red":  "\x1b[41m",
+		"none": "",
+		"256":  "",
+	}
+	for color, expected := range testCase {
+		actual := genBackColor(color)
+		if actual != expected {
+			msg := "Didn't generate correct background color code"
+			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
+		}
 	}
 }
 
@@ -69,22 +82,6 @@ func TestGenUnderlineStyle(t *testing.T) {
 	}
 }
 
-func TestGenStyleCode(t *testing.T) {
-	testCase := map[string]Option{
-		"\x1b[38;5;0m\x1b[48;5;255m": Option{background: 255, charactor: 0},
-		"\x1b[38;5;0m":               Option{background: 256, charactor: 0},
-		"\x1b[48;5;255m":             Option{background: 255, charactor: -1},
-		"":                           Option{background: 256, charactor: -1},
-	}
-	for expected, opt := range testCase {
-		actual := genStyleCode(opt)
-		if actual != expected {
-			msg := "Didn't generate correct color code"
-			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, []byte(expected), []byte(actual))
-		}
-	}
-}
-
 func TestHighlightLines(t *testing.T) {
 	colorCode := "\x1b[38;5;9m"
 	lines := make(chan string, 2)
@@ -120,42 +117,5 @@ func TestHighlightText(t *testing.T) {
 	if actual != expected {
 		msg := "Didn't return correct the sets of first index and last index"
 		t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
-	}
-}
-
-func TestColorToNumCorrectString(t *testing.T) {
-	testCase := map[string]int{
-		"red":  196,
-		"56":   56,
-		"none": -1,
-	}
-	for input, expected := range testCase {
-		actual, err := colorToNum(input)
-		if err != nil {
-			msg := "Didn't convert to correct color number. Catched error"
-			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, err)
-		}
-		if actual != expected {
-			msg := "Didn't convert correct color number"
-			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
-		}
-	}
-}
-
-func TestColorToNumIncorrectString(t *testing.T) {
-	testCase := map[string]error{
-		"test": errors.New("not defined color"),
-		"a56":  errors.New("not defined color"),
-	}
-	for input, expected := range testCase {
-		_, actual := colorToNum(input)
-		if actual == nil {
-			msg := "Didn't catched error of converting incorrect color"
-			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
-		}
-		if actual.Error() != expected.Error() {
-			msg := "Didn't convert correct color number"
-			t.Fatalf("%s\nExpected: %v\nActual  : %v", msg, expected, actual)
-		}
 	}
 }

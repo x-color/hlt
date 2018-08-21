@@ -8,6 +8,9 @@ import (
 	"github.com/urfave/cli"
 )
 
+var arg = Argument{}
+var opt = Option{}
+
 func usageError(name, usage, message string) {
 	fmt.Fprintln(os.Stderr, "Incorrect Usage.", message)
 	fmt.Fprintln(os.Stderr, "Usage:", usage)
@@ -19,7 +22,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "hlt"
 	app.Usage = "highlight texts or lines matched a given pattern in files"
-	app.Version = "0.2.0"
+	app.Version = "0.2.1"
 	app.Author = "x-color"
 	app.HelpName = app.Name
 	app.UsageText = app.Name + " [global option] command [option]... [argument]..."
@@ -32,34 +35,41 @@ func main() {
 	// It is flag of highlight commands ('word', 'line')
 	highlightFlags := []cli.Flag{
 		cli.StringFlag{
-			Name:  "background, b",
-			Value: "none",
-			Usage: "`color` background",
+			Name:        "background, b",
+			Value:       "none",
+			Usage:       "`color` background",
+			Destination: &opt.background,
 		},
 		cli.StringFlag{
-			Name:  "charactor, c",
-			Value: "red",
-			Usage: "`color` charactor",
+			Name:        "charactor, c",
+			Value:       "red",
+			Usage:       "`color` charactor",
+			Destination: &opt.charactor,
 		},
 		cli.BoolFlag{
-			Name:  "bold, B",
-			Usage: "bold format",
+			Name:        "bold, B",
+			Usage:       "bold format",
+			Destination: &opt.bold,
 		},
 		cli.BoolFlag{
-			Name:  "hide, H",
-			Usage: "hide text",
+			Name:        "hide, H",
+			Usage:       "hide text",
+			Destination: &opt.hide,
 		},
 		cli.BoolFlag{
-			Name:  "italic, I",
-			Usage: "italic format",
+			Name:        "italic, I",
+			Usage:       "italic format",
+			Destination: &opt.italic,
 		},
 		cli.BoolFlag{
-			Name:  "strikethrough, S",
-			Usage: "strikethrough text",
+			Name:        "strikethrough, S",
+			Usage:       "strikethrough text",
+			Destination: &opt.strikethrough,
 		},
 		cli.BoolFlag{
-			Name:  "underline, U",
-			Usage: "underline text",
+			Name:        "underline, U",
+			Usage:       "underline text",
+			Destination: &opt.underline,
 		},
 	}
 
@@ -72,7 +82,8 @@ func main() {
 			Description: strings.Join([]string{
 				"It highlights lines containing a text matched given pattern in files (or standard input if no files set to arguments).",
 				"It highlights only charactor on by default.",
-				"Settable color is 0~255 and 'none','blue','green','orange','pink','purple','red','yellow'.",
+				"Settable color is 'none','black','blue','cyan','green','magenta','red','yellow' and 0~255.",
+				"The color number(0~255) is supported by some terminals.",
 			}, " "),
 			Flags:  highlightFlags,
 			Action: highlightAction(hightlightLines),
@@ -85,7 +96,8 @@ func main() {
 			Description: strings.Join([]string{
 				"It highlights texts matched given pattern in files (or standard input if no files set to arguments).",
 				"It highlights only charactor on by default.",
-				"Settable color is 0~255 and 'none','blue','green','orange','pink','purple','red','yellow'.",
+				"Settable color is 'none','black','blue','cyan','green','magenta','red','yellow' and 0~255.",
+				"The color number(0~255) is supported by some terminals.",
 			}, " "),
 			Flags:  highlightFlags,
 			Action: highlightAction(hightlightText),
