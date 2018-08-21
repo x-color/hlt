@@ -4,7 +4,13 @@
 
 ## Demo
 
-![demo](resouces/demo002.gif)
+### simple highlight
+
+![demo01](resouces/demo002.gif)
+
+### formatting
+
+![demo02](resouces/demo003.gif)
 
 ## Usage
 
