@@ -8,35 +8,43 @@
 
 ## Usage
 
-### highlight a line
+### highlight
+
+#### Basic usage
 
 ```bash
-# color charactors in lines including 'text' in file.txt
+# highlight charactors in lines including 'text' in file.txt
 $ hlt line text file.txt
 $ cat file.txt | hlt line text
 
-# color charactors in lines red
+# highlight 'text' in file.txt
+$ hlt word text file.txt
+$ cat file.txt | hlt word text
+```
+
+#### Changing highlight color
+
+```bash
+# highlight charactors in lines red
 $ cat file.txt | hlt line -c red text
 
-# color background of lines blue
+# highlight background of lines blue
 $ cat file.txt | hlt line -b blue text
 ```
 
-### highlight a text
+#### Formatting
 
 ```bash
-# color 'text' in file.txt
-$ hlt word text file.txt
-$ cat file.txt | hlt word text
+# bold format
+$ cat file.txt | hlt line -B text
 
-# color 'text' red
-$ cat file.txt | hlt word -c red text
-
-# color background of `text` blue
-$ cat file.txt | hlt word -b blue text
+# italic format
+$ cat file.txt | hlt line -I text
 ```
 
 ### Options
+
+#### Color
 
 Settable color to options(`-b`, `-c`) of highlight commands are
 
@@ -49,6 +57,16 @@ Settable color to options(`-b`, `-c`) of highlight commands are
 - red
 - yellow
 - 0 ~ 255
+
+#### Format
+
+Settable formats are
+
+- bold
+- hide
+- italic
+- strikethrough
+- underline
 
 ## Install
 
