@@ -50,9 +50,14 @@ $ cat file.txt | hlt line -I text
 
 ### Options
 
-#### Color
+#### Color Control
 
-Settable color to options(`-b`, `-c`) of highlight commands are
+| option | description |
+|:-|:-|
+| --background, -b | color background of matching lines |
+| --charactor, -c | color charactors of matching lines |
+
+Settable colors are
 
 - none
 - black
@@ -64,15 +69,22 @@ Settable color to options(`-b`, `-c`) of highlight commands are
 - yellow
 - 0 ~ 255
 
-#### Format
+#### Format Control
 
-Settable formats are
+| option | description |
+|:-|:-|
+| --bold, -B | format matching texts bold |
+| --hide, -H | hide matching texts |
+| --italic, -I | format matching texts italic |
+| --strikethrough, -S | strikethrough matching texts |
+| --underline, -U | underline matching texts |
 
-- bold
-- hide
-- italic
-- strikethrough
-- underline
+#### Context Control
+
+| option | description |
+|:-|:-|
+| --after | highlight num lines after matching lines |
+| --before | highlight num lines before matching lines |
 
 ## Install
 
