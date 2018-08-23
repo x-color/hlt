@@ -119,7 +119,7 @@ func genUnderlineStyle(yes bool) (styleCode string) {
 }
 
 // genStyleCode generates color code from color number
-func genStyleCode(opt Option) (colorCode string) {
+func genStyleCode() (colorCode string) {
 	colorCode += genCharColor(opt.charactor)
 	colorCode += genBackColor(opt.background)
 	colorCode += genBoldStyle(opt.bold)
@@ -132,7 +132,7 @@ func genStyleCode(opt Option) (colorCode string) {
 
 // hightlightLines adds color code to head and tail of line including pattern
 // and sends it to channel
-func hightlightLines(pattern, colorCode string, lines, output chan string) {
+func hightlightLines(colorCode string, lines, output chan string) {
 	buffer := []string{}
 	after := 0
 	for line := range lines {
@@ -146,7 +146,7 @@ func hightlightLines(pattern, colorCode string, lines, output chan string) {
 		}
 		buffer = append(buffer, line)
 		switch {
-		case strings.Contains(line, pattern):
+		case strings.Contains(line, arg.pattern):
 			after = opt.after + 1
 			fallthrough
 		case after > 0:
@@ -165,10 +165,10 @@ func hightlightLines(pattern, colorCode string, lines, output chan string) {
 
 // hightlightText adds color code to head and tail of text matching a pattern
 // and sends it to channel
-func hightlightText(pattern, colorCode string, lines, output chan string) {
+func hightlightText(colorCode string, lines, output chan string) {
 	for line := range lines {
-		if len(colorCode) > 0 && strings.Contains(line, pattern) {
-			output <- strings.Replace(line, pattern, colorCode+pattern+"\x1b[0m", -1)
+		if len(colorCode) > 0 && strings.Contains(line, arg.pattern) {
+			output <- strings.Replace(line, arg.pattern, colorCode+arg.pattern+"\x1b[0m", -1)
 		} else {
 			output <- line
 		}
@@ -176,7 +176,7 @@ func hightlightText(pattern, colorCode string, lines, output chan string) {
 	close(output)
 }
 
-func hightlightProcess(addColor func(string, string, chan string, chan string)) {
+func hightlightProcess(addColor func(string, chan string, chan string)) {
 	lines := make(chan string, 100)
 	output := make(chan string, 100)
 	if len(arg.files) == 0 {
@@ -184,8 +184,8 @@ func hightlightProcess(addColor func(string, string, chan string, chan string)) 
 	} else {
 		go readFiles(arg.files, lines)
 	}
-	colorCode := genStyleCode(opt)
-	go addColor(arg.pattern, colorCode, lines, output)
+	colorCode := genStyleCode()
+	go addColor(colorCode, lines, output)
 	for line := range output {
 		fmt.Println(line)
 	}
@@ -206,7 +206,7 @@ func setArguments(c *cli.Context) (err error) {
 }
 
 // highlightAction is action of highlight commands
-func highlightAction(addColor func(string, string, chan string, chan string)) (action func(*cli.Context)) {
+func highlightAction(addColor func(string, chan string, chan string)) (action func(*cli.Context)) {
 	return func(c *cli.Context) {
 		err := setArguments(c)
 		if err != nil {
