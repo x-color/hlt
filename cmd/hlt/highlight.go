@@ -18,6 +18,8 @@ type Option struct {
 	italic        bool
 	strikethrough bool
 	underline     bool
+	after         int
+	before        int
 }
 
 // Argument sets arguments of highlight commands
@@ -131,12 +133,32 @@ func genStyleCode(opt Option) (colorCode string) {
 // hightlightLines adds color code to head and tail of line including pattern
 // and sends it to channel
 func hightlightLines(pattern, colorCode string, lines, output chan string) {
+	buffer := []string{}
+	after := 0
 	for line := range lines {
-		if len(colorCode) > 0 && strings.Contains(line, pattern) {
-			output <- colorCode + line + "\x1b[0m"
-		} else {
+		if len(colorCode) == 0 {
 			output <- line
+			continue
 		}
+		if len(buffer) > opt.before {
+			output <- buffer[0]
+			buffer = buffer[1:]
+		}
+		buffer = append(buffer, line)
+		switch {
+		case strings.Contains(line, pattern):
+			after = opt.after + 1
+			fallthrough
+		case after > 0:
+			for _, l := range buffer {
+				output <- colorCode + l + "\x1b[0m"
+			}
+			buffer = buffer[:0]
+		}
+		after--
+	}
+	for _, l := range buffer {
+		output <- l
 	}
 	close(output)
 }

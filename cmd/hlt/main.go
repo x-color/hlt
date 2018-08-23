@@ -85,7 +85,20 @@ func main() {
 				"Settable color is 'none','black','blue','cyan','green','magenta','red','yellow' and 0~255.",
 				"The color number(0~255) is supported by some terminals.",
 			}, " "),
-			Flags:  highlightFlags,
+			Flags: append(highlightFlags, []cli.Flag{
+				cli.IntFlag{
+					Name:        "after",
+					Value:       0,
+					Usage:       "highlight `num` lines after matching lines",
+					Destination: &opt.after,
+				},
+				cli.IntFlag{
+					Name:        "before",
+					Value:       0,
+					Usage:       "highlight `num` lines before matching lines",
+					Destination: &opt.before,
+				},
+			}...),
 			Action: highlightAction(hightlightLines),
 		},
 		{
