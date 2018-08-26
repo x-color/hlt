@@ -150,7 +150,7 @@ func TestHighlightNumLines(t *testing.T) {
 		checkers = tc.checkers
 		lines := make(chan string, 2)
 		output := make(chan string, 2)
-		go hightlightNumLines(colorCode, lines, output)
+		go highlightNumLines(colorCode, lines, output)
 		lines <- "1"
 		lines <- "2"
 		lines <- "3"

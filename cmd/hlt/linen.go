@@ -58,9 +58,9 @@ func isAssignedNum(i int) (ok bool) {
 	return false
 }
 
-// hightlightNumLines adds color code to head and tail of N lines and sends it
+// highlightNumLines adds color code to head and tail of N lines and sends it
 // to channel
-func hightlightNumLines(colorCode string, lines, output chan string) {
+func highlightNumLines(colorCode string, lines, output chan string) {
 	i := 0
 	for line := range lines {
 		i++
@@ -130,6 +130,6 @@ func linenAction() (action func(*cli.Context)) {
 			usageError(c.App.Name, c.App.UsageText, err.Error())
 			return
 		}
-		hightlightProcess(hightlightNumLines)
+		highlightProcess(highlightNumLines)
 	}
 }

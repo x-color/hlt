@@ -101,7 +101,7 @@ func TestHighlightLines(t *testing.T) {
 		opt.after, opt.before = tc.after, tc.before
 		lines := make(chan string, 2)
 		output := make(chan string, 2)
-		go hightlightLines(colorCode, lines, output)
+		go highlightLines(colorCode, lines, output)
 		lines <- "hello world"
 		lines <- "test message"
 		lines <- "finish"
@@ -123,7 +123,7 @@ func TestHighlightText(t *testing.T) {
 	output := make(chan string, 2)
 	expected := "hello \x1b[38;5;9mworld\x1b[0m\ntest message\n"
 	actual := ""
-	go hightlightText(colorCode, lines, output)
+	go highlightText(colorCode, lines, output)
 	lines <- "hello world"
 	lines <- "test message"
 	close(lines)

@@ -130,9 +130,9 @@ func genStyleCode() (colorCode string) {
 	return colorCode
 }
 
-// hightlightLines adds color code to head and tail of line including pattern
+// highlightLines adds color code to head and tail of line including pattern
 // and sends it to channel
-func hightlightLines(colorCode string, lines, output chan string) {
+func highlightLines(colorCode string, lines, output chan string) {
 	buffer := []string{}
 	after := 0
 	for line := range lines {
@@ -163,9 +163,9 @@ func hightlightLines(colorCode string, lines, output chan string) {
 	close(output)
 }
 
-// hightlightText adds color code to head and tail of text matching a pattern
+// highlightText adds color code to head and tail of text matching a pattern
 // and sends it to channel
-func hightlightText(colorCode string, lines, output chan string) {
+func highlightText(colorCode string, lines, output chan string) {
 	for line := range lines {
 		if len(colorCode) > 0 && strings.Contains(line, arg.pattern) {
 			output <- strings.Replace(line, arg.pattern, colorCode+arg.pattern+"\x1b[0m", -1)
@@ -176,7 +176,7 @@ func hightlightText(colorCode string, lines, output chan string) {
 	close(output)
 }
 
-func hightlightProcess(addColor func(string, chan string, chan string)) {
+func highlightProcess(addColor func(string, chan string, chan string)) {
 	lines := make(chan string, 100)
 	output := make(chan string, 100)
 	if len(arg.files) == 0 {
@@ -213,6 +213,6 @@ func highlightAction(addColor func(string, chan string, chan string)) (action fu
 			usageError(c.App.Name, c.App.UsageText, err.Error())
 			return
 		}
-		hightlightProcess(addColor)
+		highlightProcess(addColor)
 	}
 }

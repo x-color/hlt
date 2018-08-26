@@ -22,7 +22,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "hlt"
 	app.Usage = "highlight texts or lines matched a given pattern in files"
-	app.Version = "0.4.0"
+	app.Version = "0.4.1"
 	app.Author = "x-color"
 	app.HelpName = app.Name
 	app.UsageText = app.Name + " [global option] command [option]... [argument]..."
@@ -77,7 +77,7 @@ func main() {
 		{
 			Name:      "line",
 			Aliases:   []string{"l"},
-			Usage:     "highlight lines containing a text matched given patten",
+			Usage:     "highlight lines containing a text matched given pattern",
 			UsageText: app.Name + " line [option]... pattern [file]...",
 			Description: strings.Join([]string{
 				"It highlights lines containing a text matched given pattern in files (or standard input if no files set to arguments).",
@@ -99,12 +99,12 @@ func main() {
 					Destination: &opt.before,
 				},
 			}...),
-			Action: highlightAction(hightlightLines),
+			Action: highlightAction(highlightLines),
 		},
 		{
 			Name:      "word",
 			Aliases:   []string{"w"},
-			Usage:     "highlight texts matched given patten",
+			Usage:     "highlight texts matched given pattern",
 			UsageText: app.Name + " word [option]... pattern [file]...",
 			Description: strings.Join([]string{
 				"It highlights texts matched given pattern in files (or standard input if no files set to arguments).",
@@ -113,7 +113,7 @@ func main() {
 				"The color number(0~255) is supported by some terminals.",
 			}, " "),
 			Flags:  highlightFlags,
-			Action: highlightAction(hightlightText),
+			Action: highlightAction(highlightText),
 		},
 		{
 			Name:      "linen",
