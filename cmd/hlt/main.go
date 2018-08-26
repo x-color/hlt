@@ -22,7 +22,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "hlt"
 	app.Usage = "highlight texts or lines matched a given pattern in files"
-	app.Version = "0.3.1"
+	app.Version = "0.4.0"
 	app.Author = "x-color"
 	app.HelpName = app.Name
 	app.UsageText = app.Name + " [global option] command [option]... [argument]..."
@@ -114,6 +114,28 @@ func main() {
 			}, " "),
 			Flags:  highlightFlags,
 			Action: highlightAction(hightlightText),
+		},
+		{
+			Name:      "linen",
+			Aliases:   []string{"ln"},
+			Usage:     "highlight assigned lines",
+			UsageText: app.Name + " linen [option]... list [file]...",
+			Description: strings.Join([]string{
+				"It highlights lines assigned by list in files (or standard input if no files set to arguments).",
+				"It highlights only charactor on by default.",
+				"\nlist is made up of an integer, a type of number, a range of integers, or multiple integers ranges separated by commas.",
+				"list consists of\n",
+				"- N    line N counted from 1\n",
+				"- N~   from line N to the end of the file\n",
+				"- ~M   from the first of the file to line M\n",
+				"- N~M  from line N to line M\n",
+				"- even even-numbered lines\n",
+				"- odd  odd-numbered lines\n",
+				"Settable color is 'none','black','blue','cyan','green','magenta','red','yellow' and 0~255.",
+				"The color number(0~255) is supported by some terminals.",
+			}, " "),
+			Flags:  highlightFlags,
+			Action: linenAction(),
 		},
 	}
 
