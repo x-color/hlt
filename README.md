@@ -6,11 +6,15 @@
 
 ### simple highlight
 
-![demo01](resouces/demo002.gif)
+![demo02](resouces/demo002.gif)
 
 ### formatting
 
-![demo02](resouces/demo003.gif)
+![demo03](resouces/demo003.gif)
+
+### highlight lines N to M
+
+![demo04](resouces/demo004.gif)
 
 ## Usage
 
@@ -26,6 +30,10 @@ $ cat file.txt | hlt line text
 # highlight 'text' in file.txt
 $ hlt word text file.txt
 $ cat file.txt | hlt word text
+
+# highlight line 2 to 10 and 20 to the end in file.txt
+$ hlt linen 2~10,20~ file.txt
+$ cat file.txt | hlt linen 2~10
 ```
 
 #### Changing highlight color
@@ -80,6 +88,8 @@ Settable colors are
 | --underline, -U | underline matching texts |
 
 #### Context Control
+
+This options can be set to `line` command only.
 
 | option | description |
 |:-|:-|
