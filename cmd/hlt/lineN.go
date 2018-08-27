@@ -9,8 +9,8 @@ import (
 	"github.com/urfave/cli"
 )
 
-// LinenArg is argument of linen command
-type LinenArg struct {
+// lineNArg is argument of lineN command
+type lineNArg struct {
 	// checkers is list of functions check number of line in assigned range
 	checkers []func(int) bool
 }
@@ -53,7 +53,7 @@ func isBetweenAandB(a, b int) (checker func(int) bool) {
 
 // isAssignedNum checks argument to use checker functions
 func isAssignedNum(i int) (ok bool) {
-	for _, cheker := range arg.linen.checkers {
+	for _, cheker := range arg.lineN.checkers {
 		if cheker(i) {
 			return true
 		}
@@ -76,16 +76,16 @@ func highlightNumLines(colorCode string, lines, output chan string) {
 	close(output)
 }
 
-// parseLinenArgs is parser of list of ranges
+// parseStringOfList is parser of list of ranges
 func parseStringOfList(list string) {
 	nums := map[int]bool{}
 	for _, condition := range strings.Split(list, ",") {
 		switch condition {
 		case "odd":
-			arg.linen.checkers = append(arg.linen.checkers, isOdd)
+			arg.lineN.checkers = append(arg.lineN.checkers, isOdd)
 			continue
 		case "even":
-			arg.linen.checkers = append(arg.linen.checkers, isEven)
+			arg.lineN.checkers = append(arg.lineN.checkers, isEven)
 			continue
 		}
 
@@ -105,14 +105,14 @@ func parseStringOfList(list string) {
 			if err != nil {
 				max = math.MaxInt64
 			}
-			arg.linen.checkers = append(arg.linen.checkers, isBetweenAandB(min, max))
+			arg.lineN.checkers = append(arg.lineN.checkers, isBetweenAandB(min, max))
 		}
 	}
-	arg.linen.checkers = append(arg.linen.checkers, inNums(nums))
+	arg.lineN.checkers = append(arg.lineN.checkers, inNums(nums))
 }
 
-// parseLinenArgs is parser of arguments of linen command
-func parseLinenArgs(c *cli.Context) (err error) {
+// parselineNArgs is parser of arguments of lineN command
+func parselineNArgs(c *cli.Context) (err error) {
 	switch {
 	case c.NArg() >= 2:
 		arg.files = c.Args()[1:]
@@ -125,10 +125,10 @@ func parseLinenArgs(c *cli.Context) (err error) {
 	}
 }
 
-// linenAction is action of highlight commands
-func linenAction() (action func(*cli.Context)) {
+// lineNAction is action of highlight commands
+func lineNAction() (action func(*cli.Context)) {
 	return func(c *cli.Context) {
-		err := parseLinenArgs(c)
+		err := parselineNArgs(c)
 		if err != nil {
 			usageError(c.App.Name, c.App.UsageText, err.Error())
 			return

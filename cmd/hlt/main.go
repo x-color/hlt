@@ -18,7 +18,7 @@ type Option struct {
 type Argument struct {
 	line  LineArg
 	word  WordArg
-	linen LinenArg
+	lineN lineNArg
 	files []string
 }
 
@@ -152,7 +152,7 @@ func main() {
 				"     - number color number is 0~255, it is supported by some terminals",
 			}, "\n"),
 			Flags:  highlightFlags,
-			Action: linenAction(),
+			Action: lineNAction(),
 		},
 	}
 

@@ -110,7 +110,7 @@ func TestIsAssignedNum(t *testing.T) {
 		{7, true},
 		{8, true},
 	}
-	arg.linen.checkers = append(arg.linen.checkers, isOdd, inNums(map[int]bool{2: true}), isBetweenAandB(8, 10))
+	arg.lineN.checkers = append(arg.lineN.checkers, isOdd, inNums(map[int]bool{2: true}), isBetweenAandB(8, 10))
 	for _, tc := range testCase {
 		expected := tc.output
 		actual := isAssignedNum(tc.num)
@@ -147,7 +147,7 @@ func TestHighlightNumLines(t *testing.T) {
 	for _, tc := range testCase {
 		expected := tc.output
 		actual := ""
-		arg.linen.checkers = tc.checkers
+		arg.lineN.checkers = tc.checkers
 		lines := make(chan string, 2)
 		output := make(chan string, 2)
 		go highlightNumLines(colorCode, lines, output)
