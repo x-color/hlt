@@ -9,8 +9,24 @@ import (
 	"github.com/urfave/cli"
 )
 
-// Option sets options of highlight commands
-type Option struct {
+// LineOpt is option of line command
+type LineOpt struct {
+	after  int
+	before int
+}
+
+// LineArg is argument of line command
+type LineArg struct {
+	pattern string
+}
+
+// WordArg is argument of word command
+type WordArg struct {
+	pattern string
+}
+
+// Style is option of highlight style
+type Style struct {
 	background    string
 	charactor     string
 	bold          bool
@@ -18,16 +34,9 @@ type Option struct {
 	italic        bool
 	strikethrough bool
 	underline     bool
-	after         int
-	before        int
 }
 
-// Argument sets arguments of highlight commands
-type Argument struct {
-	pattern string
-	files   []string
-}
-
+// colorNumber maps color name to number
 var colorNumber = map[string]int{
 	"black":   0,
 	"blue":    4,
@@ -120,13 +129,13 @@ func genUnderlineStyle(yes bool) (styleCode string) {
 
 // genStyleCode generates color code from color number
 func genStyleCode() (colorCode string) {
-	colorCode += genCharColor(opt.charactor)
-	colorCode += genBackColor(opt.background)
-	colorCode += genBoldStyle(opt.bold)
-	colorCode += genHideStyle(opt.hide)
-	colorCode += genItalicStyle(opt.italic)
-	colorCode += genStrikethroughStyle(opt.strikethrough)
-	colorCode += genUnderlineStyle(opt.underline)
+	colorCode += genCharColor(opt.style.charactor)
+	colorCode += genBackColor(opt.style.background)
+	colorCode += genBoldStyle(opt.style.bold)
+	colorCode += genHideStyle(opt.style.hide)
+	colorCode += genItalicStyle(opt.style.italic)
+	colorCode += genStrikethroughStyle(opt.style.strikethrough)
+	colorCode += genUnderlineStyle(opt.style.underline)
 	return colorCode
 }
 
@@ -140,14 +149,14 @@ func highlightLines(colorCode string, lines, output chan string) {
 			output <- line
 			continue
 		}
-		if len(buffer) > opt.before {
+		if len(buffer) > opt.line.before {
 			output <- buffer[0]
 			buffer = buffer[1:]
 		}
 		buffer = append(buffer, line)
 		switch {
-		case strings.Contains(line, arg.pattern):
-			after = opt.after + 1
+		case strings.Contains(line, arg.line.pattern):
+			after = opt.line.after + 1
 			fallthrough
 		case after > 0:
 			for _, l := range buffer {
@@ -167,8 +176,8 @@ func highlightLines(colorCode string, lines, output chan string) {
 // and sends it to channel
 func highlightText(colorCode string, lines, output chan string) {
 	for line := range lines {
-		if len(colorCode) > 0 && strings.Contains(line, arg.pattern) {
-			output <- strings.Replace(line, arg.pattern, colorCode+arg.pattern+"\x1b[0m", -1)
+		if len(colorCode) > 0 && strings.Contains(line, arg.word.pattern) {
+			output <- strings.Replace(line, arg.word.pattern, colorCode+arg.word.pattern+"\x1b[0m", -1)
 		} else {
 			output <- line
 		}
@@ -198,7 +207,8 @@ func setArguments(c *cli.Context) (err error) {
 		arg.files = c.Args()[1:]
 		fallthrough
 	case c.NArg() == 1:
-		arg.pattern = c.Args()[0]
+		arg.line.pattern = c.Args()[0]
+		arg.word.pattern = c.Args()[0]
 	default:
 		return errors.New("no arguments")
 	}

@@ -8,6 +8,20 @@ import (
 	"github.com/urfave/cli"
 )
 
+// Option sets options of commands
+type Option struct {
+	line  LineOpt
+	style Style
+}
+
+// Argument sets arguments of commands
+type Argument struct {
+	line  LineArg
+	word  WordArg
+	linen LinenArg
+	files []string
+}
+
 var arg = Argument{}
 var opt = Option{}
 
@@ -38,38 +52,38 @@ func main() {
 			Name:        "background, b",
 			Value:       "none",
 			Usage:       "`color` background",
-			Destination: &opt.background,
+			Destination: &opt.style.background,
 		},
 		cli.StringFlag{
 			Name:        "charactor, c",
 			Value:       "red",
 			Usage:       "`color` charactor",
-			Destination: &opt.charactor,
+			Destination: &opt.style.charactor,
 		},
 		cli.BoolFlag{
 			Name:        "bold, B",
 			Usage:       "bold format",
-			Destination: &opt.bold,
+			Destination: &opt.style.bold,
 		},
 		cli.BoolFlag{
 			Name:        "hide, H",
 			Usage:       "hide text",
-			Destination: &opt.hide,
+			Destination: &opt.style.hide,
 		},
 		cli.BoolFlag{
 			Name:        "italic, I",
 			Usage:       "italic format",
-			Destination: &opt.italic,
+			Destination: &opt.style.italic,
 		},
 		cli.BoolFlag{
 			Name:        "strikethrough, S",
 			Usage:       "strikethrough text",
-			Destination: &opt.strikethrough,
+			Destination: &opt.style.strikethrough,
 		},
 		cli.BoolFlag{
 			Name:        "underline, U",
 			Usage:       "underline text",
-			Destination: &opt.underline,
+			Destination: &opt.style.underline,
 		},
 	}
 
@@ -91,13 +105,13 @@ func main() {
 					Name:        "after",
 					Value:       0,
 					Usage:       "highlight `num` lines after matching lines",
-					Destination: &opt.after,
+					Destination: &opt.line.after,
 				},
 				cli.IntFlag{
 					Name:        "before",
 					Value:       0,
 					Usage:       "highlight `num` lines before matching lines",
-					Destination: &opt.before,
+					Destination: &opt.line.before,
 				},
 			}...),
 			Action: highlightAction(highlightLines),

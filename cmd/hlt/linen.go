@@ -9,8 +9,11 @@ import (
 	"github.com/urfave/cli"
 )
 
-// checkers is list of functions check number of line in assigned range
-var checkers []func(int) bool
+// LinenArg is argument of linen command
+type LinenArg struct {
+	// checkers is list of functions check number of line in assigned range
+	checkers []func(int) bool
+}
 
 // inNums returns true if argument in nums
 func inNums(nums map[int]bool) func(int) bool {
@@ -50,7 +53,7 @@ func isBetweenAandB(a, b int) (checker func(int) bool) {
 
 // isAssignedNum checks argument to use checker functions
 func isAssignedNum(i int) (ok bool) {
-	for _, cheker := range checkers {
+	for _, cheker := range arg.linen.checkers {
 		if cheker(i) {
 			return true
 		}
@@ -79,10 +82,10 @@ func parseStringOfList(list string) {
 	for _, condition := range strings.Split(list, ",") {
 		switch condition {
 		case "odd":
-			checkers = append(checkers, isOdd)
+			arg.linen.checkers = append(arg.linen.checkers, isOdd)
 			continue
 		case "even":
-			checkers = append(checkers, isEven)
+			arg.linen.checkers = append(arg.linen.checkers, isEven)
 			continue
 		}
 
@@ -102,10 +105,10 @@ func parseStringOfList(list string) {
 			if err != nil {
 				max = math.MaxInt64
 			}
-			checkers = append(checkers, isBetweenAandB(min, max))
+			arg.linen.checkers = append(arg.linen.checkers, isBetweenAandB(min, max))
 		}
 	}
-	checkers = append(checkers, inNums(nums))
+	arg.linen.checkers = append(arg.linen.checkers, inNums(nums))
 }
 
 // parseLinenArgs is parser of arguments of linen command
