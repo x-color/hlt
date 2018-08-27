@@ -5,25 +5,26 @@ import (
 )
 
 func TestHighlightLines(t *testing.T) {
-	testCase := []struct {
-		after  int
-		before int
-		output string
+	testCases := []struct {
+		colorCode string
+		after     int
+		before    int
+		output    string
 	}{
-		{0, 0, "hello world\n\x1b[38;5;9mtest message\x1b[0m\nfinish\n"},
-		{1, 0, "hello world\n\x1b[38;5;9mtest message\x1b[0m\n\x1b[38;5;9mfinish\x1b[0m\n"},
-		{0, 1, "\x1b[38;5;9mhello world\x1b[0m\n\x1b[38;5;9mtest message\x1b[0m\nfinish\n"},
-		{1, 1, "\x1b[38;5;9mhello world\x1b[0m\n\x1b[38;5;9mtest message\x1b[0m\n\x1b[38;5;9mfinish\x1b[0m\n"},
+		{"\x1b[38;5;9m", 0, 0, "hello world\n\x1b[38;5;9mtest message\x1b[0m\nfinish\n"},
+		{"\x1b[38;5;9m", 1, 0, "hello world\n\x1b[38;5;9mtest message\x1b[0m\n\x1b[38;5;9mfinish\x1b[0m\n"},
+		{"\x1b[38;5;9m", 0, 1, "\x1b[38;5;9mhello world\x1b[0m\n\x1b[38;5;9mtest message\x1b[0m\nfinish\n"},
+		{"\x1b[38;5;9m", 1, 1, "\x1b[38;5;9mhello world\x1b[0m\n\x1b[38;5;9mtest message\x1b[0m\n\x1b[38;5;9mfinish\x1b[0m\n"},
+		{"", 0, 0, "hello world\ntest message\nfinish\n"},
 	}
-	colorCode := "\x1b[38;5;9m"
 	arg.line.pattern = "test"
-	for _, tc := range testCase {
+	for _, tc := range testCases {
 		expected := tc.output
 		actual := ""
 		opt.line.after, opt.line.before = tc.after, tc.before
 		lines := make(chan string, 2)
 		output := make(chan string, 2)
-		go highlightLines(colorCode, lines, output)
+		go highlightLines(tc.colorCode, lines, output)
 		lines <- "hello world"
 		lines <- "test message"
 		lines <- "finish"

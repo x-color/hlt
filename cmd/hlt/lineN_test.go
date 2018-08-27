@@ -3,7 +3,7 @@ package main
 import "testing"
 
 func TestInNums(t *testing.T) {
-	testCase := []struct {
+	testCases := []struct {
 		num    int
 		output bool
 	}{
@@ -20,7 +20,7 @@ func TestInNums(t *testing.T) {
 		8: true,
 	}
 	checker := inNums(nums)
-	for _, tc := range testCase {
+	for _, tc := range testCases {
 		expected := tc.output
 		actual := checker(tc.num)
 		if actual != expected {
@@ -31,7 +31,7 @@ func TestInNums(t *testing.T) {
 }
 
 func TestIsOdd(t *testing.T) {
-	testCase := []struct {
+	testCases := []struct {
 		num    int
 		output bool
 	}{
@@ -42,7 +42,7 @@ func TestIsOdd(t *testing.T) {
 		{8, false},
 		{9, true},
 	}
-	for _, tc := range testCase {
+	for _, tc := range testCases {
 		expected := tc.output
 		actual := isOdd(tc.num)
 		if actual != expected {
@@ -53,7 +53,7 @@ func TestIsOdd(t *testing.T) {
 }
 
 func TestIsEven(t *testing.T) {
-	testCase := []struct {
+	testCases := []struct {
 		num    int
 		output bool
 	}{
@@ -64,7 +64,7 @@ func TestIsEven(t *testing.T) {
 		{8, true},
 		{9, false},
 	}
-	for _, tc := range testCase {
+	for _, tc := range testCases {
 		expected := tc.output
 		actual := isEven(tc.num)
 		if actual != expected {
@@ -75,7 +75,7 @@ func TestIsEven(t *testing.T) {
 }
 
 func TestIsBetweenAandB(t *testing.T) {
-	testCase := []struct {
+	testCases := []struct {
 		num    int
 		output bool
 	}{
@@ -86,7 +86,7 @@ func TestIsBetweenAandB(t *testing.T) {
 		{5, false},
 	}
 	checker := isBetweenAandB(2, 4)
-	for _, tc := range testCase {
+	for _, tc := range testCases {
 		expected := tc.output
 		actual := checker(tc.num)
 		if actual != expected {
@@ -97,7 +97,7 @@ func TestIsBetweenAandB(t *testing.T) {
 }
 
 func TestIsAssignedNum(t *testing.T) {
-	testCase := []struct {
+	testCases := []struct {
 		num    int
 		output bool
 	}{
@@ -111,7 +111,7 @@ func TestIsAssignedNum(t *testing.T) {
 		{8, true},
 	}
 	arg.lineN.checkers = append(arg.lineN.checkers, isOdd, inNums(map[int]bool{2: true}), isBetweenAandB(8, 10))
-	for _, tc := range testCase {
+	for _, tc := range testCases {
 		expected := tc.output
 		actual := isAssignedNum(tc.num)
 		if actual != expected {
@@ -122,7 +122,7 @@ func TestIsAssignedNum(t *testing.T) {
 }
 
 func TestHighlightNumLines(t *testing.T) {
-	testCase := []struct {
+	testCases := []struct {
 		checkers []func(int) bool
 		output   string
 	}{
@@ -144,7 +144,7 @@ func TestHighlightNumLines(t *testing.T) {
 		},
 	}
 	colorCode := "\x1b[38;5;9m"
-	for _, tc := range testCase {
+	for _, tc := range testCases {
 		expected := tc.output
 		actual := ""
 		arg.lineN.checkers = tc.checkers
