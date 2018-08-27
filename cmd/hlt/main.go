@@ -36,7 +36,7 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "hlt"
 	app.Usage = "highlight texts or lines in files"
-	app.Version = "0.4.2"
+	app.Version = "0.4.5"
 	app.Author = "x-color"
 	app.HelpName = app.Name
 	app.UsageText = app.Name + " [global option] command [option]... [argument]..."
@@ -114,7 +114,20 @@ func main() {
 					Destination: &opt.line.before,
 				},
 			}...),
-			Action: highlightAction(highlightLines),
+			Action: func(c *cli.Context) {
+				switch {
+				case c.NArg() >= 2:
+					arg.files = c.Args()[1:]
+					fallthrough
+				case c.NArg() == 1:
+					arg.line.pattern = c.Args()[0]
+					arg.word.pattern = c.Args()[0]
+				default:
+					usageError(app.Name, app.UsageText, "no arguments")
+					return
+				}
+				highlightProcess(highlightLines)
+			},
 		},
 		{
 			Name:      "word",
@@ -128,8 +141,21 @@ func main() {
 				"     - name   'none','black','blue','cyan','green','magenta','red','yellow'",
 				"     - number color number is 0~255, it is supported by some terminals",
 			}, "\n"),
-			Flags:  highlightFlags,
-			Action: highlightAction(highlightText),
+			Flags: highlightFlags,
+			Action: func(c *cli.Context) {
+				switch {
+				case c.NArg() >= 2:
+					arg.files = c.Args()[1:]
+					fallthrough
+				case c.NArg() == 1:
+					arg.line.pattern = c.Args()[0]
+					arg.word.pattern = c.Args()[0]
+				default:
+					usageError(app.Name, app.UsageText, "no arguments")
+					return
+				}
+				highlightProcess(highlightText)
+			},
 		},
 		{
 			Name:      "linen",
@@ -151,8 +177,20 @@ func main() {
 				"     - name   'none','black','blue','cyan','green','magenta','red','yellow'",
 				"     - number color number is 0~255, it is supported by some terminals",
 			}, "\n"),
-			Flags:  highlightFlags,
-			Action: lineNAction(),
+			Flags: highlightFlags,
+			Action: func(c *cli.Context) {
+				switch {
+				case c.NArg() >= 2:
+					arg.files = c.Args()[1:]
+					fallthrough
+				case c.NArg() == 1:
+					arg.lineN.checkers = parseStringOfList(c.Args()[0])
+				default:
+					usageError(app.Name, app.UsageText, "no argument")
+					return
+				}
+				highlightProcess(highlightNumLines)
+			},
 		},
 	}
 

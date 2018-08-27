@@ -1,12 +1,9 @@
 package main
 
 import (
-	"errors"
 	"math"
 	"strconv"
 	"strings"
-
-	"github.com/urfave/cli"
 )
 
 // lineNArg is argument of lineN command
@@ -77,15 +74,15 @@ func highlightNumLines(colorCode string, lines, output chan string) {
 }
 
 // parseStringOfList is parser of list of ranges
-func parseStringOfList(list string) {
+func parseStringOfList(list string) (checkers []func(int) bool) {
 	nums := map[int]bool{}
 	for _, condition := range strings.Split(list, ",") {
 		switch condition {
 		case "odd":
-			arg.lineN.checkers = append(arg.lineN.checkers, isOdd)
+			checkers = append(checkers, isOdd)
 			continue
 		case "even":
-			arg.lineN.checkers = append(arg.lineN.checkers, isEven)
+			checkers = append(checkers, isEven)
 			continue
 		}
 
@@ -105,34 +102,9 @@ func parseStringOfList(list string) {
 			if err != nil {
 				max = math.MaxInt64
 			}
-			arg.lineN.checkers = append(arg.lineN.checkers, isBetweenAandB(min, max))
+			checkers = append(checkers, isBetweenAandB(min, max))
 		}
 	}
-	arg.lineN.checkers = append(arg.lineN.checkers, inNums(nums))
-}
-
-// parselineNArgs is parser of arguments of lineN command
-func parselineNArgs(c *cli.Context) (err error) {
-	switch {
-	case c.NArg() >= 2:
-		arg.files = c.Args()[1:]
-		fallthrough
-	case c.NArg() == 1:
-		parseStringOfList(c.Args()[0])
-		return nil
-	default:
-		return errors.New("no arguments")
-	}
-}
-
-// lineNAction is action of highlight commands
-func lineNAction() (action func(*cli.Context)) {
-	return func(c *cli.Context) {
-		err := parselineNArgs(c)
-		if err != nil {
-			usageError(c.App.Name, c.App.UsageText, err.Error())
-			return
-		}
-		highlightProcess(highlightNumLines)
-	}
+	checkers = append(checkers, inNums(nums))
+	return checkers
 }
