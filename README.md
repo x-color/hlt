@@ -96,6 +96,31 @@ This options can be set to `line` command only.
 | --after | highlight num lines after matching lines |
 | --before | highlight num lines before matching lines |
 
+## Customize default highlight style
+
+`hlt` consults `$HOME/.hlt/config.yaml`.
+
+#### Colors
+
+You can change highlight colors, `background` is none, `charactor` is red on by default.
+
+```yaml
+background: none
+charactor: green
+```
+
+#### Formats
+
+You can change highlight formats, these formats are `false` on by default. 
+
+```yaml
+bold: true
+hide: false
+italic: false
+strikethrough: false
+underline: false
+```
+
 ## Install
 
 ```bash
