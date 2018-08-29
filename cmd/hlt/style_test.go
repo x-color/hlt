@@ -135,13 +135,13 @@ func TestGenUnderlineStyle(t *testing.T) {
 }
 
 func TestGenStyleCode(t *testing.T) {
-	opt.style.charactor = "red"
-	opt.style.background = "red"
-	opt.style.bold = true
-	opt.style.hide = true
-	opt.style.italic = true
-	opt.style.strikethrough = true
-	opt.style.underline = true
+	opt.style.Charactor = "red"
+	opt.style.Background = "red"
+	opt.style.Bold = true
+	opt.style.Hide = true
+	opt.style.Italic = true
+	opt.style.Strikethrough = true
+	opt.style.Underline = true
 	expected := "\x1b[31m\x1b[41m\x1b[1m\x1b[8m\x1b[3m\x1b[9m\x1b[4m"
 	actual := genStyleCode()
 	if actual != expected {

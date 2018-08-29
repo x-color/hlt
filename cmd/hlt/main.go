@@ -25,6 +25,32 @@ type Argument struct {
 var arg = Argument{}
 var opt = Option{}
 
+func initOptFromFile(c *cli.Context) (err error) {
+	style := readConfig(configFile("~/.hlt/config.yaml"))
+	if !c.IsSet("background") && style.Background != "" {
+		opt.style.Background = style.Background
+	}
+	if !c.IsSet("charactor") && style.Charactor != "" {
+		opt.style.Charactor = style.Charactor
+	}
+	if !c.IsSet("bold") {
+		opt.style.Bold = style.Bold
+	}
+	if !c.IsSet("hide") {
+		opt.style.Hide = style.Hide
+	}
+	if !c.IsSet("italic") {
+		opt.style.Italic = style.Italic
+	}
+	if !c.IsSet("strikethrough") {
+		opt.style.Strikethrough = style.Strikethrough
+	}
+	if !c.IsSet("underline") {
+		opt.style.Underline = style.Underline
+	}
+	return nil
+}
+
 func usageError(name, usage, message string) {
 	fmt.Fprintln(os.Stderr, "Incorrect Usage.", message)
 	fmt.Fprintln(os.Stderr, "Usage:", usage)
@@ -36,14 +62,14 @@ func main() {
 	app := cli.NewApp()
 	app.Name = "hlt"
 	app.Usage = "highlight texts or lines in files"
-	app.Version = "0.4.5"
+	app.Version = "0.5.0"
 	app.Author = "x-color"
 	app.HelpName = app.Name
 	app.UsageText = app.Name + " [global option] command [option]... [argument]..."
 	app.Description = strings.Join([]string{
-		app.Name,
-		"highlights texts or lines in files (or standard input if no files set to arguments).",
-	}, " ")
+		app.Name + " highlights texts or lines in files (or standard input if no files set to arguments).",
+		"   You can customize default highlight style options, if you write '~/.hlt/config.yaml'.",
+	}, "\n")
 	app.HideHelp = true
 
 	// It is flag of highlight commands
@@ -52,38 +78,38 @@ func main() {
 			Name:        "background, b",
 			Value:       "none",
 			Usage:       "`color` background",
-			Destination: &opt.style.background,
+			Destination: &opt.style.Background,
 		},
 		cli.StringFlag{
 			Name:        "charactor, c",
 			Value:       "red",
 			Usage:       "`color` charactor",
-			Destination: &opt.style.charactor,
+			Destination: &opt.style.Charactor,
 		},
 		cli.BoolFlag{
 			Name:        "bold, B",
 			Usage:       "bold format",
-			Destination: &opt.style.bold,
+			Destination: &opt.style.Bold,
 		},
 		cli.BoolFlag{
 			Name:        "hide, H",
 			Usage:       "hide text",
-			Destination: &opt.style.hide,
+			Destination: &opt.style.Hide,
 		},
 		cli.BoolFlag{
 			Name:        "italic, I",
 			Usage:       "italic format",
-			Destination: &opt.style.italic,
+			Destination: &opt.style.Italic,
 		},
 		cli.BoolFlag{
 			Name:        "strikethrough, S",
 			Usage:       "strikethrough text",
-			Destination: &opt.style.strikethrough,
+			Destination: &opt.style.Strikethrough,
 		},
 		cli.BoolFlag{
 			Name:        "underline, U",
 			Usage:       "underline text",
-			Destination: &opt.style.underline,
+			Destination: &opt.style.Underline,
 		},
 	}
 
@@ -128,6 +154,7 @@ func main() {
 				}
 				highlightProcess(highlightLines)
 			},
+			Before: initOptFromFile,
 		},
 		{
 			Name:      "word",
@@ -156,6 +183,7 @@ func main() {
 				}
 				highlightProcess(highlightText)
 			},
+			Before: initOptFromFile,
 		},
 		{
 			Name:      "linen",
@@ -191,6 +219,7 @@ func main() {
 				}
 				highlightProcess(highlightNumLines)
 			},
+			Before: initOptFromFile,
 		},
 	}
 

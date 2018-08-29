@@ -7,13 +7,13 @@ import (
 
 // Style is option of highlight style
 type Style struct {
-	background    string
-	charactor     string
-	bold          bool
-	hide          bool
-	italic        bool
-	strikethrough bool
-	underline     bool
+	Background    string `yaml:"background"`
+	Charactor     string `yaml:"charactor"`
+	Bold          bool   `yaml:"bold"`
+	Hide          bool   `yaml:"hide"`
+	Italic        bool   `yaml:"italic"`
+	Strikethrough bool   `yaml:"strikethrough"`
+	Underline     bool   `yaml:"underline"`
 }
 
 // colorNumber maps color name to number
@@ -109,12 +109,12 @@ func genUnderlineStyle(yes bool) (styleCode string) {
 
 // genStyleCode generates color code from color number
 func genStyleCode() (colorCode string) {
-	colorCode += genCharColor(opt.style.charactor)
-	colorCode += genBackColor(opt.style.background)
-	colorCode += genBoldStyle(opt.style.bold)
-	colorCode += genHideStyle(opt.style.hide)
-	colorCode += genItalicStyle(opt.style.italic)
-	colorCode += genStrikethroughStyle(opt.style.strikethrough)
-	colorCode += genUnderlineStyle(opt.style.underline)
+	colorCode += genCharColor(opt.style.Charactor)
+	colorCode += genBackColor(opt.style.Background)
+	colorCode += genBoldStyle(opt.style.Bold)
+	colorCode += genHideStyle(opt.style.Hide)
+	colorCode += genItalicStyle(opt.style.Italic)
+	colorCode += genStrikethroughStyle(opt.style.Strikethrough)
+	colorCode += genUnderlineStyle(opt.style.Underline)
 	return colorCode
 }
