@@ -2,6 +2,8 @@
 
 `hlt` is tool to highlight texts or lines matched a given pattern in files.
 
+NOTE: **Finished development of this CLI**. But, I develop `mkr`(https://github.com/x-color/mkr) is a CLI marking a text. Please check it, If you need cli liked this.
+
 ## Demo
 
 ### simple highlight
